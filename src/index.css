@@ -1,0 +1,63 @@
+@import "tailwindcss";
+@font-face {
+  font-family: "Gilroy Thin";
+  src: url("../src/assets/fonts/Gilroy-Thin.woff") format("woff");
+  font-weight: 100;
+  font-style: normal;
+}
+.font-gilroy-thin {
+  font-family: "Gilroy Thin", sans-serif;
+}
+@font-face {
+  font-family: "Gilroy Bold";
+  src: url("../src/assets/fonts/Gilroy-Bold.woff") format("woff");
+  font-weight: 900;
+  font-style: normal;
+}
+.font-gilroy-bold {
+  font-family: "Gilroy Bold";
+}
+@font-face {
+  font-family: "Gilroy Medium";
+  src: url("../src/assets/fonts/Gilroy-Medium.woff") format("woff");
+  font-weight: 500;
+  font-style: normal;
+}
+
+.element {
+  width: 100%;
+  height: 100%;
+  border: 2px dashed transparent;
+  border-image: repeating-linear-gradient(
+      90deg,
+      gray 0%,
+      gray 1%,
+      white 1%,
+      white 2%
+    )
+    1;
+  border-image-slice: 1;
+}
+
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Gilroy Bold";
+}
+@layer components {
+  .wrapper {
+    width: 100%;
+    max-width: 100%; /* Это можно настроить для разных разрешений */
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 4rem; /* Можно настроить в зависимости от дизайна */
+    padding-right: 4rem;
+    @media (max-width: 1024px) {
+      
+    } /* Можно настроить в зависимости от дизайна */
+  }
+}

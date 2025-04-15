@@ -1,0 +1,12 @@
+.wrapper{
+    width: 100%;
+    max-width: 100%; /* Это можно настроить для разных разрешений */
+    margin-left: auto;
+    margin-right: auto;
+    
+    padding: 0 70px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 40px;
+}
