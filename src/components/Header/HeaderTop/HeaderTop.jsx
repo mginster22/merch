@@ -1,11 +1,15 @@
 import React from "react";
+import { Link } from "react-router";
+import { useDispatch } from "react-redux";
+import { toggleBasketPopup } from "../../../features/uiSlice/uiSlice";
 
 const HeaderTop = () => {
+  const dispatch = useDispatch();
   return (
     <div className="flex justify-between items-center wrapper pt-[40px] max-lg:p-[20px] ">
-      <div>
+      <Link to="/">
         <img src="/images/logo.png" className="w-80 max-lg:w-60" />
-      </div>
+      </Link>
       <div className="w-96 flex items-center relative gap-5 ">
         <div className="absolute pl-2">
           <img src="/images/search.svg" className="max-lg:w-[17px]" />
@@ -24,6 +28,9 @@ const HeaderTop = () => {
       </a>
       <div>
         <img src="/images/user.svg" className="w-[30px] max-lg:w-[22px] " />
+      </div>
+      <div onClick={() => dispatch(toggleBasketPopup())}>
+        <img src="/images/basket.svg" />
       </div>
       <div className="flex items-center ">
         <p className="max-lg:text-[15px]">RU/ </p>

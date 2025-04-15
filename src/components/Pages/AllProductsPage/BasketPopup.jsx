@@ -1,13 +1,20 @@
 import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { closeBasketPopup } from "../../../features/uiSlice/uiSlice";
+import { removeFromBasket } from "../../../features/basket/ basketSlice";
 
-const BasketPopup = ({ togglePopupBusket, basket, deleteBasketById,selectedSize,setSelectedSize}) => {
+const BasketPopup = () => {
+  const basket = useSelector((state) => state.basket.items);
+  const dispatch = useDispatch();
+
+  console.log(basket);
   return (
     <div
       className="fixed inset-0 bg-[rgba(0,0,0,0.5)] z-50 flex flex-col items-center pt-[50px] overflow-y-auto gap-[50px]"
-      onClick={togglePopupBusket}
+      onClick={() => dispatch(closeBasketPopup())}
     >
       <div
-        className="w-[80%] h-[50%] bg-white rounded-2xl p-[20px] pb-[300px] "
+        className="w-[80%] h-[50%] bg-white rounded-2xl p-[20px] pb-[300px]"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-between">
@@ -15,7 +22,7 @@ const BasketPopup = ({ togglePopupBusket, basket, deleteBasketById,selectedSize,
             <h3>Оформить заказ</h3>
             <p>
               Введите свои контактные данные, и наш менеджер свяжется с Вами в
-              течении 1 часа
+              течение 1 часа
             </p>
             <form className="flex flex-col w-[200px] items-start gap-[20px] mt-[20px]">
               <input
@@ -33,34 +40,45 @@ const BasketPopup = ({ togglePopupBusket, basket, deleteBasketById,selectedSize,
                 placeholder="Введите телефон"
                 className="border-b-2"
               />
-              <button className="w-[200px] py-[15px] rounded-4xl bg-[#309F85]">
+              <button className="w-[200px] py-[15px] rounded-4xl bg-[#309F85] text-white">
                 Заказать
               </button>
             </form>
           </div>
+
           {basket.length === 0 ? (
-            <p>PUSTOO</p>
+            <p className="text-xl">Корзина пуста</p>
           ) : (
-            <div>
+            <div className="flex flex-col gap-[15px] h-[300px] overflow-y-auto">
               {basket.map((item) => (
                 <div
                   className="flex items-center gap-[10px]"
                   key={item.uniqueId}
                 >
                   <img src={item.selectedImage} className="w-[100px]" />
-                  <p>{item.title}</p>
-                  <p>{item.size[selectedSize]}</p>
-                  <p>{item.price}</p>
-                  <button onClick={() => deleteBasketById(item.uniqueId)}>
+                  <div>
+                    <p>{item.title}</p>
+                    {item.selectedSize !== null &&
+                      item.size &&
+                      item.size[item.selectedSize] && (
+                        <p>Размер: {item.size[item.selectedSize]}</p>
+                      )}
+                    <p>{item.price}</p>
+                  </div>
+                  <button
+                    className="text-red-500 ml-auto"
+                    onClick={() => dispatch(removeFromBasket(item.uniqueId))}
+                  >
                     X
                   </button>
                 </div>
               ))}
-              <p>
-                TOTALPRICE:
+              <p className="font-bold text-right mt-4">
+                Итого:{" "}
                 {basket
                   .reduce((acc, item) => acc + Number(item.price), 0)
                   .toFixed(2)}{" "}
+                ₽
               </p>
             </div>
           )}

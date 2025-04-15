@@ -1,5 +1,7 @@
 import classNames from "classnames";
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { addToBasket } from "../../../features/basket/ basketSlice";
 
 const Popup = ({
   togglePopup,
@@ -7,12 +9,33 @@ const Popup = ({
   handleNextPopupImage,
   product,
   popupImageIndex,
-  setBasket,
   selectedSize,
-  setSelectedSize
+  setSelectedSize,
 }) => {
-
   const [activeCharackteristic, setActiveCharackteristic] = useState(false);
+  const [successMessage, setSuccessMessage] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const handleOrder = () => {
+    dispatch(
+      addToBasket({
+        ...product,
+        selectedImage: product.imgs[popupImageIndex],
+        selectedSize: selectedSize,
+        size: product.size,
+        uniqueId: Date.now(),
+      })
+    );
+
+    setSuccessMessage(true);
+
+    // Закрыть попап через 2 секунды
+    setTimeout(() => {
+      setSuccessMessage(false);
+      togglePopup(false);
+    }, 2000);
+  };
 
   return (
     <div
@@ -20,7 +43,7 @@ const Popup = ({
       onClick={togglePopup}
     >
       <div
-        className="w-[80%] h-[80%]   bg-[#FAFAFA] p-[30px] rounded-[20px] flex gap-[20px] relative pb-[200px]"
+        className="w-[80%] h-[80%] bg-[#FAFAFA] p-[30px] rounded-[20px] flex gap-[20px] relative pb-[200px]"
         onClick={(e) => e.stopPropagation()}
       >
         <div
@@ -29,25 +52,25 @@ const Popup = ({
         >
           X
         </div>
-        <div className=" flex flex-col gap-[20px]">
-          <div className=" relative w-[550px] h-[400px] flex items-center justify-center">
+        <div className="flex flex-col gap-[20px]">
+          <div className="relative w-[550px] h-[400px] flex items-center justify-center">
             <div className="bg-[#ECE7F0] p-[10px] rounded-2xl absolute top-[50%] left-[50px] flex justify-center">
               <img
                 src="/images/arrowleft.png"
-                className="cursor-pointer  w-[20px] h-[20px] "
+                className="cursor-pointer w-[20px] h-[20px]"
                 onClick={handlePrevPopupImage}
               />
             </div>
             <div className="bg-[#ECE7F0] p-[10px] rounded-2xl absolute right-[50px] top-[50%] flex justify-center">
               <img
                 src="/images/arrowright.png"
-                className="cursor-pointer w-[20px] h-[20px]  "
+                className="cursor-pointer w-[20px] h-[20px]"
                 onClick={handleNextPopupImage}
               />
             </div>
             <img
               src={product.imgs[popupImageIndex]}
-              className=" bg-cover  object-cover h-[300px]"
+              className="bg-cover object-cover h-[300px]"
             />
           </div>
           <div className="w-[500px] h-[100px] flex items-center flex-wrap gap-[10px]">
@@ -60,6 +83,7 @@ const Popup = ({
             ))}
           </div>
         </div>
+
         <div className="flex flex-col gap-[20px]">
           <h5 className="text-[30px] w-[450px]">{product.title}</h5>
           <div className="flex items-center">
@@ -91,21 +115,22 @@ const Popup = ({
                 <img src="/images/ruler.svg" />
                 <p className="text-[12px]">Подобрать размер</p>
               </div>
-              <button
-                className="bg-[#524983] text-white py-[10px] px-[70px] rounded-2xl cursor-pointer mt-[30px]"
-                onClick={() => {
-                  setBasket((prev) => [
-                    ...prev,
-                    {
-                      ...product,
-                      selectedImage: product.imgs[popupImageIndex],
-                      uniqueId: Date.now(),
-                    },
-                  ]);
-                }}
-              >
-                Заказать
-              </button>
+              <div className="relative">
+                {/* Кнопка Заказать */}
+                <button
+                  className="bg-[#524983] text-white py-[10px] px-[70px] rounded-2xl cursor-pointer mt-[30px]"
+                  onClick={handleOrder}
+                >
+                  Заказать
+                </button>
+
+                {/* Уведомление */}
+                {successMessage && (
+                  <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-green-500 text-white px-4 py-2 rounded-xl shadow-md">
+                    Выполнен
+                  </div>
+                )}
+              </div>
             </div>
             <div className="w-full">
               <div
@@ -122,7 +147,7 @@ const Popup = ({
                   {product.characteristics.map((item, i) => (
                     <div
                       key={i}
-                      className="flex items-center justify-between border-b-2 font-gilroy-thin pt-[10px] pb-[10px] gap-[10px] "
+                      className="flex items-center justify-between border-b-2 font-gilroy-thin pt-[10px] pb-[10px] gap-[10px]"
                     >
                       <p className="whitespace-nowrap">{item.name}</p>
                       <p className="text-right max-w-[60%] break-words">
